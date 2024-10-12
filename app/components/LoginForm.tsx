@@ -20,10 +20,12 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     // Here you would typically call your authentication API
     try {
@@ -37,6 +39,7 @@ export default function LoginForm() {
 
       if (!response.ok) {
         // If the response is not okay, throw an error
+        setIsLoading(false);
         throw new Error("Invalid email or password");
       }
 
@@ -45,7 +48,7 @@ export default function LoginForm() {
 
       // Handle successful login, e.g., store tokens, redirect user, etc.
       console.log("Login successful:", data);
-      router.push("/home");
+      router.push("/questionnaire");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message); // Safely access the message property
@@ -106,9 +109,10 @@ export default function LoginForm() {
         <CardFooter className="p-6">
           <Button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-700 hover:bg-blue-800 text-white"
           >
-            Log in
+            {isLoading ? "Logging in..." : "Log in"}
           </Button>
         </CardFooter>
       </form>
