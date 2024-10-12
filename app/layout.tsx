@@ -1,9 +1,9 @@
 "use client";
-import { Fira_Sans } from "next/font/google"; // Import Fira Sans font correctly
+import { DM_Sans } from "next/font/google"; // Import Fira Sans font correctly
 import "./globals.css";
 
 // Load the Fira Sans font with subsets
-const firaSans = Fira_Sans({
+const firaSans = DM_Sans({
   subsets: ["latin"],
   weight: "400",
 });

@@ -1,7 +1,7 @@
-import React from "react";
+// app/page.tsx or app/page.js
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return <div>hello world</div>;
-};
-
-export default page;
+export default function Page() {
+  redirect("/login"); // Redirect from / to /home
+  return null; // Return null because the redirect will happen instantly
+}

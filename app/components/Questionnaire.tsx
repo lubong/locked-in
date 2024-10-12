@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Anchor, Ship, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const setTotalQuestions = 5;
 
@@ -83,7 +84,7 @@ export default function Component() {
   const [isComplete, setIsComplete] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [progress, setProgress] = useState(0);
-
+  const router = useRouter();
   const totalQuestions = setTotalQuestions;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,13 +132,21 @@ export default function Component() {
               </div>
             ))}
           </div>
+          <Button
+            onClick={() => router.push("/progress")}
+            type="submit"
+            disabled={isLoading}
+            className="bg-blue-700 hover:bg-blue-800 text-white flex items-center whitespace-nowrap ml-auto mt-5"
+          >
+            {isLoading ? "Processing..." : "Done"}
+          </Button>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="w-3/4 py-6 max-w-7xl mx-auto shadow-lg bg-gradient-to-r from-slate-50 to-blue-50">
+    <Card className="w-3/4 py-6 max-w-7xl mx-auto shadow-lg bg-gradient-to-r from-slate-100 to-blue-100">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <Anchor className="text-blue-700 w-6 h-6" />

@@ -1,23 +1,22 @@
 import React from "react";
-import RoadMap from "../components/RoadMap";
+import Questionnaire from "../components/Questionnaire";
 import NavBar from "../components/NavBar";
-import Image from "next/image";
 import myBg from "../public/images/maritime-grid.png";
-
-const progress = () => {
+import Image from "next/image";
+const HomePage = () => {
   return (
     <div className="flex h-screen">
-      <NavBar />
+      <NavBar></NavBar>
       <Image
         src={myBg}
         alt="bg"
         className="w-full h-full object-cover object-center -z-10 absolute opacity-30"
       />
-      <main className="ml-20 w-full">
-        <RoadMap />
+      <main className="flex-grow flex items-center justify-center mx-4">
+        <Questionnaire />
       </main>
     </div>
   );
 };
 
-export default progress;
+export default HomePage;
