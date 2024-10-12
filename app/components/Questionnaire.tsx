@@ -9,50 +9,69 @@ import { Anchor, Ship, ChevronRight } from "lucide-react";
 
 const setTotalQuestions = 5;
 
+// Custom fetch function with authorization handling
+async function customFetch(
+  url: string,
+  method: "GET" | "POST",
+  bodyData?: Record<string, unknown>
+) {
+  const token = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("authToken="))
+    ?.split("=")[1]; // Retrieve the token from cookies
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`, // Add the Bearer token here
+  };
+
+  const options: RequestInit = {
+    method,
+    headers,
+  };
+
+  if (method === "POST" && bodyData) {
+    options.body = JSON.stringify(bodyData);
+  }
+
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch from ${url}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return null;
+  }
+}
+
 const getNextQuestion = async (
   question: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   answer: string
 ): Promise<string | null> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  try {
-    const response = await fetch("https://psacodesprint.vercel.app/answer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        question,
-        answer,
-      }),
-    });
+  // Post answer using the custom fetch
+  const postResponse = await customFetch(
+    "https://psacodesprint.vercel.app/answer",
+    "POST",
+    { question, answer }
+  );
 
-    if (!response.ok) {
-      throw new Error("Failed to post answer");
-    }
-    try {
-      const response = await fetch(
-        "https://psacodesprint.vercel.app/progress",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch next question");
-      }
-      const data = await response.json();
-      return data.next_question || null; // Assuming the response has the next question
-    } catch (error) {
-      console.error("Error fetching next question", error);
-      return null;
-    }
-  } catch (error) {
-    console.error("Error posting answer:", error);
-    return null; // Return null in case of an error
+  if (!postResponse) {
+    return null; // Stop if posting the answer failed
   }
+
+  // Fetch the next question using the custom fetch
+  const progressResponse = await customFetch(
+    "https://psacodesprint.vercel.app/progress",
+    "GET"
+  );
+
+  if (!progressResponse) {
+    return null; // Stop if fetching the next question failed
+  }
+
+  return progressResponse.next_question || null;
 };
 
 export default function Component() {
@@ -71,7 +90,9 @@ export default function Component() {
     e.preventDefault();
     setIsLoading(true);
     setAnswers((prev) => ({ ...prev, [currentQuestion]: answer }));
+
     const nextQuestion = await getNextQuestion(currentQuestion, answer);
+
     if (nextQuestion) {
       setCurrentQuestion(nextQuestion);
       setAnswer("");
@@ -85,7 +106,7 @@ export default function Component() {
 
   if (isComplete) {
     return (
-      <Card className="w-full max-w-7xl mx-auto mt-8 shadow-lg bg-gradient-to-r from-slate-50 to-blue-50">
+      <Card className="w-full max-w-7xl mx-auto shadow-lg bg-gradient-to-r from-slate-50 to-blue-50">
         <CardContent className="p-8">
           <div className="flex items-center justify-between mb-6">
             <Ship className="text-blue-700 w-12 h-12" />
@@ -116,7 +137,7 @@ export default function Component() {
   }
 
   return (
-    <Card className="w-full max-w-7xl mx-auto mt-8 shadow-lg bg-gradient-to-r from-slate-50 to-blue-50">
+    <Card className="w-3/4 py-6 max-w-7xl mx-auto shadow-lg bg-gradient-to-r from-slate-50 to-blue-50">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <Anchor className="text-blue-700 w-6 h-6" />

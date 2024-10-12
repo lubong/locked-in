@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { redirect } from "next/navigation";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +20,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -41,9 +41,11 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
+      document.cookie = `authToken=${data.token}; path=/; secure; samesite=strict;`;
+
       // Handle successful login, e.g., store tokens, redirect user, etc.
       console.log("Login successful:", data);
-      // router.push("/home");
+      router.push("/home");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message); // Safely access the message property
@@ -51,8 +53,6 @@ export default function LoginForm() {
         setError("An unexpected error occurred"); // Fallback error message
       }
       redirect("/");
-    } finally {
-      redirect("/home");
     }
   };
 
