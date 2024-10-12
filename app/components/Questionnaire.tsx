@@ -7,27 +7,57 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Anchor, Ship, ChevronRight } from "lucide-react";
 
+const setTotalQuestions = 5;
+
 const getNextQuestion = async (
-  currentQuestion: string,
+  question: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   answer: string
 ): Promise<string | null> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  const questions = [
-    "What's your area of expertise in the maritime industry?",
-    "How many years of experience do you have in this field?",
-    "What's the most significant challenge you've faced in your maritime career?",
-    "In your opinion, what's the future of sustainable shipping?",
-  ];
-  const currentIndex = questions.indexOf(currentQuestion);
-  if (currentIndex < questions.length - 1) {
-    return questions[currentIndex + 1];
+  try {
+    const response = await fetch("https://psacodesprint.vercel.app/answer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question,
+        answer,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to post answer");
+    }
+    try {
+      const response = await fetch(
+        "https://psacodesprint.vercel.app/progress",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch next question");
+      }
+      const data = await response.json();
+      return data.next_question || null; // Assuming the response has the next question
+    } catch (error) {
+      console.error("Error fetching next question", error);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error posting answer:", error);
+    return null; // Return null in case of an error
   }
-  return null;
 };
 
 export default function Component() {
   const [currentQuestion, setCurrentQuestion] = useState(
-    "What's your area of expertise in the maritime industry?"
+    "What's your current job role at PSA?"
   );
   const [answer, setAnswer] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +65,7 @@ export default function Component() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [progress, setProgress] = useState(0);
 
-  const totalQuestions = 4;
+  const totalQuestions = setTotalQuestions;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

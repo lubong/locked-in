@@ -1,12 +1,16 @@
 import React from "react";
 import Questionnaire from "../components/Questionnaire";
+import NavBar from "../components/NavBar";
 
-const homePage = () => {
+const HomePage = () => {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <Questionnaire />
+    <div className="flex h-screen">
+      <NavBar></NavBar>
+      <main className="flex-grow flex items-center justify-center mx-4">
+        <Questionnaire />
+      </main>
     </div>
   );
 };
 
-export default homePage;
+export default HomePage;
