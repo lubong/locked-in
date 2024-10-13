@@ -3,7 +3,6 @@ import React from "react";
 import {
   User,
   BarChart,
-  Briefcase,
   BookOpen,
   Clipboard,
   Settings,
@@ -24,7 +23,7 @@ export default function Navbar() {
   return (
     <nav className="w-fit fixed h-screen bg-gradient-to-b from-blue-300 to-blue-500 shadow-lg p-4">
       <div className="flex flex-col items-center h-full">
-        <Link href="/home">
+        <Link href="/progress">
           <Image
             src={logo}
             alt="PSA Logo"
@@ -35,17 +34,12 @@ export default function Navbar() {
         {/* Navigation Cards */}
         <div className="flex flex-col justify-between h-full">
           <div className="flex flex-col space-y-4">
-            <Link href="/profile">
-              <NavItem icon={<User className="w-5 h-5" />} label="Profile" />
-            </Link>
+            <NavItem icon={<User className="w-5 h-5" />} label="Profile" />
             <Link href="/progress">
               <NavItem
                 icon={<BarChart className="w-5 h-5" />}
                 label="Progress"
               />
-            </Link>
-            <Link href="/jobs">
-              <NavItem icon={<Briefcase className="w-5 h-5" />} label="Jobs" />
             </Link>
             <Link href="/courses">
               <NavItem
@@ -67,15 +61,8 @@ export default function Navbar() {
                 label="Questionnaire"
               />
             </Link>
-            <Link href="/language">
-              <NavItem icon={<Globe className="w-5 h-5" />} label="Language" />
-            </Link>
-            <Link href="/settings">
-              <NavItem
-                icon={<Settings className="w-5 h-5" />}
-                label="Settings"
-              />
-            </Link>
+            <NavItem icon={<Globe className="w-5 h-5" />} label="Language" />
+            <NavItem icon={<Settings className="w-5 h-5" />} label="Settings" />
           </div>
         </div>
       </div>

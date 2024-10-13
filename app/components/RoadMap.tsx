@@ -76,7 +76,7 @@ const SkillNode: React.FC<SkillNodeProps> = ({
     const angleStep = (2 * Math.PI) / numChildren;
     return childSkills.map((childSkill, index) => {
       const angle = index * angleStep;
-      const radius = numChildren * 60;
+      const radius = numChildren < 3 ? 240 : numChildren * 60;
       return {
         skill: childSkill,
         x: x + radius * Math.cos(angle),
@@ -95,7 +95,7 @@ const SkillNode: React.FC<SkillNodeProps> = ({
     const angleStep = (endAngle - startAngle) / (numChildren || 1);
     return childSkills.map((childSkill, index) => {
       const angle = startAngle + index * angleStep;
-      const radius = numChildren * 80;
+      const radius = numChildren < 3 ? 240 : numChildren * 80;
       return {
         skill: childSkill,
         x: x + radius * Math.cos(angle),
