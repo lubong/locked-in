@@ -74,8 +74,8 @@ export function RecommendedEdits({
                 {expandedEdit === index && (
                   <div className="space-y-2 mt-2">
                     <div className="flex items-start space-x-2 bg-blue-100 p-2 rounded">
-                      <Info className="h-5 w-5 text-blue-500 mt-0.5" />
-                      <p className="text-blue-800 text-sm">{edit.reason}</p>
+                      <Info className="h-5 w-5 text-red-600 mt-0.5" />
+                      <p className="text-red-600 text-sm">{edit.reason}</p>
                     </div>
                     {edit.suggested.map((sugg) => (
                       <Textarea

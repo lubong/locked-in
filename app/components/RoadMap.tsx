@@ -146,6 +146,14 @@ const SkillNode: React.FC<SkillNodeProps> = ({
             >
               {100}%
             </Badge>
+            <button
+              onClick={() =>
+                (window.location.href = `/career/${skill.id}/courses`)
+              }
+              className="flex items-center px-2 py-0 bg-orange-400 text-white border-1 border-orange-400 rounded-lg shadow-lg hover:bg-orange-500 transition-all duration-300"
+            >
+              Go
+            </button>
             {100 === 100 && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +201,7 @@ export default function MaritimeSkillsMindmap() {
           "GET"
         );
         setSkills(data.progress);
-        console.log(data);
+        console.log(data.is_question_done);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }

@@ -8,8 +8,7 @@ import { FeedbackSection } from "./performance/feedback-section";
 import { ReviewSummary } from "./performance/review-summary";
 import { BiasDetection } from "./performance/bias-detection";
 import { RecommendedEdits, Edit } from "./performance/recommended-edits";
-import { useRouter } from "next/navigation";
-
+import PerformanceGoals from "./performance/performance-goals";
 async function customFetch(
   url: string,
   method: "GET" | "POST",
@@ -81,9 +80,8 @@ export default function PerformanceReview() {
   });
   const [recommendedEdits, setRecommendedEdits] = useState<Edit[]>([]);
   const [displayComments, setDisplayComments] = useState("");
-  const [, setCanSubmit] = useState(false); // State to track submission readiness
+  const [CanSubmit, setCanSubmit] = useState(false); // State to track submission readiness
   const [biasChecked, setBiasChecked] = useState(false); // New state to track if bias check has been done
-  const router = useRouter();
 
   useEffect(() => {
     setDisplayComments(performanceData.comments);
@@ -188,7 +186,9 @@ export default function PerformanceReview() {
 
   const handleSubmit = () => {
     console.log("Submitting performance review:", performanceData);
-    router.push("/performance-review");
+    setCanSubmit(true);
+    setIsLoading(false);
+    // router.push("/performance-review");
   };
 
   async function postReview(
@@ -258,12 +258,18 @@ export default function PerformanceReview() {
             comments={displayComments}
             onCommentsChange={handleDisplayCommentsChange}
           />
+          {CanSubmit && <PerformanceGoals />}
+
           <Button
             onClick={handleCheckReview}
-            disabled={isLoading}
+            disabled={isLoading || CanSubmit}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white border border-blue-500 shadow-md"
           >
-            {isLoading ? "Submitting..." : "Submit Review"}
+            {isLoading
+              ? "Submitting..."
+              : CanSubmit
+              ? "Submitted"
+              : "Submit Review"}
           </Button>
         </CardContent>
       </Card>
